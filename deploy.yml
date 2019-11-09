@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  pre_tasks:
+    - name: Set container registry endpoint
+      set_fact:
+        region: us-central1
+        registry: gcr.io/scg-go/scg-go
+        service_name: scg-go
+    - name: Containerizing an app and uploading it to Container Registry
+      shell: gcloud builds submit --tag {{ registry }}
+  tasks:
+    - name: Deploying to Cloud Run
+      shell: gcloud beta run deploy --image {{ registry }} --platform managed --region {{ region }} {{ service_name }}
